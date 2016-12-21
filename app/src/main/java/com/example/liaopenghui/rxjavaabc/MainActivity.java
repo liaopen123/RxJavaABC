@@ -1,10 +1,8 @@
 package com.example.liaopenghui.rxjavaabc;
 
-import android.database.Observable;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -13,8 +11,6 @@ import com.example.liaopenghui.rxjavaabc.bean.Course;
 import com.example.liaopenghui.rxjavaabc.bean.Student;
 
 import java.util.ArrayList;
-import java.util.Observer;
-import java.util.logging.Logger;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -45,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * 应用实例:
-     * 现在要答应Students对象里的Course对象,并且一个Student有很多Course
+     * 现在要打印Students对象里的Course对象,并且一个Student有很多Course
      * 相当于发送(Observable)的是Student对象,得到的是Course对象  那么需要一个中转(中转的作用是发送Course对象)
      */
     private void practiceForFlatMap() {

@@ -2,13 +2,11 @@ package com.example.liaopenghui.rxjavaabc
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
-import io.reactivex.ObservableOnSubscribe
-import io.reactivex.Observer
+import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Consumer
 import io.reactivex.functions.Function
 import io.reactivex.observers.DisposableObserver
@@ -17,6 +15,7 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.toast
 import java.util.concurrent.Callable
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), AnkoLogger {
     //mCompositeDisposable作用：如果一个页面有多个observer需要观察  可以通用放在里面
@@ -32,7 +31,10 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
 //        baseFunc1()
 //        threadChange()
 //        mapOprationSymble()
-        concatOperationSymble()
+//        concatOperationSymble()
+//        flatMapOprationSymble()
+//        zipOprationSymble()
+        intervalOprationSymble()
     }
 
     private fun baseFunc() {
@@ -172,6 +174,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
 
         })
     }
+
     //concat操作符
     fun getObservableB(o: Any?): Observable<String> {
         return Observable.fromCallable(object : Callable<String> {
@@ -183,10 +186,63 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
         })
     }
 
+    //flatMap 拿着上个函数的结果 作为下一个函数的参数
+    fun flatMapOprationSymble() {
+        Observable.create(object : ObservableOnSubscribe<String> {
+            override fun subscribe(emitter: ObservableEmitter<String>) {
+                emitter.onNext("123456789111")
+            }
+        }).flatMap(object : Function<String,ObservableSource<String>>{
+            override fun apply(t: String): ObservableSource<String> {
+                if(t == "123456789"){
+                    return object :ObservableSource<String>{
+                        override fun subscribe(observer: Observer<in String>) {
+                            observer.onNext("密码正确")
+                        }
+                    }
+                }else{
+                    return object :ObservableSource<String>{
+                        override fun subscribe(observer: Observer<in String>) {
+                            observer.onNext("密码错误")
+                        }
+                    }
+                }
+            }
+
+        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(object :Consumer<String>{
+            override fun accept(t: String?) {
+                toast(t.toString())
+            }
+
+
+        })
+    }
+
+    fun zipOprationSymble(){
+        Observable.zip(getObservableA(null),getObservableB(null),object :BiFunction<String,String,String>{
+            override fun apply(t1: String, t2: String): String {
+                return t1+t2
+
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(object :Consumer<String>{
+            override fun accept(t: String?) {
+                toast(t.toString())
+            }
+        })
+    }
+
+
+    fun intervalOprationSymble(){
+         disposable = Flowable.interval(1, TimeUnit.SECONDS).doOnNext { t -> error("accept: doOnNext : $t") }
+            .subscribe { t -> error("accept: accept : $t") }
+    }
 
     override fun onDestroy() {
         // 如果退出程序，就清除后台任务
         mCompositeDisposable.clear()
+        disposable.dispose()
         super.onDestroy()
     }
+
+
 }

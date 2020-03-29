@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/GitHub-RxJavaABC.iml" filepath="$PROJECT_DIR$/GitHub-RxJavaABC.iml" group="RxJavaABC" />
       <module fileurl="file://$PROJECT_DIR$/RxJavaABC.iml" filepath="$PROJECT_DIR$/RxJavaABC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/RxJavaABC-app.iml" filepath="$PROJECT_DIR$/app/RxJavaABC-app.iml" group="RxJavaABC/app" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
